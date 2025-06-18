@@ -26,11 +26,6 @@ def login(request):
             return redirect('/')
     return render(request, "tareas/trueIndex.html")
 
-        
-
-    return render(request, "tareas/trueIndex.html")
-
-
 
 def register(request):
     if request.method == 'POST':
@@ -61,20 +56,29 @@ def index(request, name):
     #context = {"tareas": tareas}
     #return HttpResponse(template.render(context, request))
 
-def editar(request, usuario, id):
+def editar(request, name, id):
     try:
-        tarea = Tarea.objects.get(pk=id)
+        user = Usuario.objects.get(nombre=name)
+    except Usuario.DoesNotExist:
+        raise Http404("Usuario no existe")
+    try:
+        relacion = user.tiene.filter(tarea__id=id).first()
+        tarea = relacion.tarea
         if request.method == 'POST':
             tarea.titulo = request.POST.get('titulo')
             tarea.completado = 'completado' in request.POST
             tarea.save()
-            return redirect('index')
-        return render(request, "tareas/editar.html", {"tarea": tarea})
+            return redirect('index', name = name)
+        return render(request, "tareas/editar.html", {"tarea": tarea, "name": name})
     except Tarea.DoesNotExist:
         raise Http404("Tarea no encontrada")
     
-def crear(request, usuario):
+def crear(request, name):
     if request.method == 'POST':
+        try:
+            user = Usuario.objects.get(nombre=name)
+        except Usuario.DoesNotExist:
+            raise Http404("Usuario no existe")
         tarea = Tarea(
             titulo = request.POST.get('titulo'),
             completado = 'completado' in request.POST,
@@ -83,12 +87,25 @@ def crear(request, usuario):
             fecha=date.today()
         )
         tarea.save()
-        return redirect('index')
-    return render(request, "tareas/crear.html")
+        relacion=usuarioTarea.objects.create(usuario = user, tarea = tarea, clave = tarea.uuid)
+        relacion.save()
+        return redirect('index', name = name)
+    return render(request, "tareas/crear.html", {"name": name})
 
-def borrar(request, id):
-    tarea = Tarea.objects.get(pk=id)
+def borrar(request, name, id):
+    try:
+        user = Usuario.objects.get(nombre=name)
+    except Usuario.DoesNotExist:
+        raise Http404("Usuario no existe")
+    try:
+        relacion = user.tiene.filter(tarea__id=id).first()
+        tarea = relacion.tarea
+        tarea.delete()
+        return redirect('index', name = name)
+    except Tarea.DoesNotExist:
+        raise Http404("Tarea no encontrada")
+    """tarea = Tarea.objects.get(pk=id)
     if request.method == 'POST':
         tarea.delete()
         return redirect('index')
-    return redirect('index')
+    return redirect('index')"""

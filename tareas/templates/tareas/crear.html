@@ -2,7 +2,7 @@
 
 {% block contenido %}
 <h1>Crea tu tarea</h1>
-<form method="POST" action="/tareas/crear/">
+<form method="POST" action="/tareas/{{name}}/crear/">
     {% csrf_token %}
     <label>
     Título: <input type="text" name="titulo" required>

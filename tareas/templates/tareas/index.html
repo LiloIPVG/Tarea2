@@ -1,8 +1,8 @@
 <!-- tareas/templates/tareas/index.html -->
 {% if tareas %}
     <ul>
-    {% for tarea in tareas %}
-        <li><a href="{% url 'editar' tarea.id %}">{{tarea.id}}. {{ tarea.titulo }} - {% if tarea.completado %}Completado{% else %}No completado{% endif %}</a>
+    {% for clave, tarea in tareas.items %}
+        <li><a href="{% url 'editar' name tarea.id %}">{{tarea.id}}. {{ tarea.titulo }} - {% if tarea.completado %}Completado{% else %}No completado{% endif %}</a>
         </li>
     {% endfor %}
     </ul>

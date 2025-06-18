@@ -1,4 +1,4 @@
-<form method="POST" action="/tareas/{{ tarea.id }}/">
+<form method="POST" action="/tareas/{{name}}/{{ tarea.id }}/">
     {% csrf_token %}
     <label>
         Título: <input name="titulo" value = "{{ tarea.titulo }}">
@@ -8,4 +8,4 @@
     </label>
     <p></p>
     <button type="submit">Guardar tarea</button>
-</form><form method="POST" action="{% url 'borrar' tarea.id %}">{% csrf_token %}<button type="submit">Borrar tarea</button></form>
+</form><form method="POST" action="{% url 'borrar' name tarea.id %}">{% csrf_token %}<button type="submit">Borrar tarea</button></form>
