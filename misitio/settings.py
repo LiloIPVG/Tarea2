@@ -120,10 +120,9 @@ STATIC_URL = 'static/'
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+#Sesiones
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'

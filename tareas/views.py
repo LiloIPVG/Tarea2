@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 import uuid
 from datetime import date
+
+# tareas/views.py
 from django.http import HttpResponse
 from django.http import Http404
 from .models import Tarea
@@ -12,12 +14,20 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.urls import reverse
 
+def logout(request):
+    if request.method == 'POST':
+        print("Ejecutando logout manual")
+        request.session.flush()
+        print("SESSION:", request.session.items())
+        return redirect('/')
+
 def login(request):
     if request.method == 'POST':
         name = request.POST['nombre']
         password = request.POST['pass']
         try:
             usuario = Usuario.objects.get(nombre=name, contraseña=password)
+            request.session['usuario_id'] = usuario.id
             # Redirige a la URL /nombre
             return redirect(reverse('index', kwargs={'name': usuario.nombre}))
         except Usuario.DoesNotExist:
@@ -41,6 +51,12 @@ def register(request):
     return render(request, "tareas/register.html")
 
 def index(request, name):
+    if not request.session.get('usuario_id'):
+        return redirect('/')
+    try:
+        usuario = Usuario.objects.get(nombre=name)
+    except Usuario.DoesNotExist:
+        return redirect('/')
     usuario =  Usuario.objects.get(nombre=name)
     tareas = {rel.clave: rel.tarea for rel in usuario.tiene.all()}
     template = loader.get_template("tareas/index.html")
@@ -55,6 +71,8 @@ def index(request, name):
     #return HttpResponse(template.render(context, request))
 
 def editar(request, name, id):
+    if not request.session.get('usuario_id'):
+        return redirect('/')
     try:
         user = Usuario.objects.get(nombre=name)
     except Usuario.DoesNotExist:
@@ -72,6 +90,8 @@ def editar(request, name, id):
         raise Http404("Tarea no encontrada")
     
 def crear(request, name):
+    if not request.session.get('usuario_id'):
+        return redirect('/')
     if request.method == 'POST':
         try:
             user = Usuario.objects.get(nombre=name)
@@ -91,6 +111,8 @@ def crear(request, name):
     return render(request, "tareas/crear.html", {"name": name})
 
 def borrar(request, name, id):
+    if not request.session.get('usuario_id'):
+        return redirect('/')
     try:
         user = Usuario.objects.get(nombre=name)
     except Usuario.DoesNotExist:
