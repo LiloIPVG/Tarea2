@@ -9,9 +9,6 @@ class Tarea(models.Model):
     completado = models.BooleanField(default=False)
     important = models.BooleanField(default=False)
     fecha = models.DateField(default=date.today)
-
-    def __str__(self):
-        return f"{self.titulo} - Completado: {"Sí" if self.completado else "No"}"
     
 class Usuario(models.Model):
     nombre = models.TextField(max_length=100)

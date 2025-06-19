@@ -2,8 +2,6 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 import uuid
 from datetime import date
-
-# tareas/views.py
 from django.http import HttpResponse
 from django.http import Http404
 from .models import Tarea
