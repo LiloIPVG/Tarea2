@@ -1,6 +1,16 @@
 
 
-{% block contenido %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear tarea</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+</head>
+<body>
+    {% block contenido %}
 <h1>Crea tu tarea</h1>
 <form method="POST" action="/tareas/{{name}}/crear/">
     {% csrf_token %}
@@ -19,3 +29,5 @@
     <button type="submit">Crear tarea</button>
 </form>
 {% endblock %}
+</body>
+</html>

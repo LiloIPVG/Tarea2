@@ -1,15 +1,27 @@
 <!-- tareas/templates/tareas/index.html -->
-{% if tareas %}
+ <!DOCTYPE html>
+ {% load static %}
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de tareas</title>
+    <link rel="stylesheet" href="{% static 'css/estilos.css' %}">
+ </head>
+ <body>
+    {% if tareas %}
     <ul>
     {% for clave, tarea in tareas.items %}
         <li><a href="{% url 'editar' name tarea.id %}">{{tarea.id}}. {{ tarea.titulo }} - {% if tarea.completado %}Completado{% else %}No completado{% endif %}</a>
         </li>
     {% endfor %}
     </ul>
-{% else %}
-    <p>No hay tareas.</p>
-{% endif %}
+    {% else %}
+        <p>No hay tareas.</p>
+    {% endif %}
 
-<a href="{% url 'crear' name %}">
-    <button>Crear Tarea</button>
-</a>
+    <a href="{% url 'crear' name %}">
+        <button>Crear Tarea</button>
+    </a>
+ </body>
+ </html>
