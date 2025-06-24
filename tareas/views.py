@@ -124,8 +124,3 @@ def borrar(request, name, id):
         return redirect('index', name = name)
     except Tarea.DoesNotExist:
         raise Http404("Tarea no encontrada")
-    """tarea = Tarea.objects.get(pk=id)
-    if request.method == 'POST':
-        tarea.delete()
-        return redirect('index')
-    return redirect('index')"""

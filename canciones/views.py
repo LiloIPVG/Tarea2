@@ -9,8 +9,10 @@ from .models import Cancion, Usuario, UsuarioCancion
 # --- Vistas de Autenticación ---
 
 def login(request):
+
     if 'nombre_usuario' in request.session:
         return redirect(reverse('canciones:lista_canciones', kwargs={'name': request.session['nombre_usuario']}))
+
     if request.method == 'POST':
         name = request.POST['nombre']
         password = request.POST['pass']
@@ -55,7 +57,6 @@ def register(request):
 
 
 def logout_view(request):
-
     if 'nombre_usuario' in request.session:
         del request.session['nombre_usuario']
     messages.info(request, "Has cerrado sesión exitosamente.")
@@ -67,7 +68,7 @@ def lista_canciones(request, name):
     if 'nombre_usuario' not in request.session:
         messages.error(request, "Debes iniciar sesión para acceder a esta página.")
         return redirect('login')
-    
+
     if request.session.get('nombre_usuario') != name:
         messages.error(request, "Acceso no autorizado a la lista de otro usuario.")
         return redirect('login')
@@ -85,6 +86,7 @@ def lista_canciones(request, name):
 
 
 def crear_cancion(request, name):
+
     if 'nombre_usuario' not in request.session or request.session.get('nombre_usuario') != name:
         messages.error(request, "Acceso no autorizado.")
         return redirect('login')
@@ -97,6 +99,7 @@ def crear_cancion(request, name):
         album = request.POST.get('album')
         ano_lanzamiento_str = request.POST.get('ano_lanzamiento')
         es_favorita_global = 'es_favorita' in request.POST 
+
         if not titulo or not titulo.strip():
             messages.error(request, "El título de la canción es obligatorio y no puede estar vacío.")
             context = {
@@ -134,6 +137,7 @@ def crear_cancion(request, name):
             if ano_lanzamiento is not None and (ano_lanzamiento < 1900 or ano_lanzamiento > date.today().year):
                 messages.error(request, f"El año de lanzamiento debe estar entre 1900 y {date.today().year}.")
                 context = {
+                    "name": name,
                     "is_authenticated": True,
                     "current_year": date.today().year,
                     "cancion": {
@@ -172,7 +176,7 @@ def crear_cancion(request, name):
                 'fecha_agregada': date.today()
             }
         )
-        if not created:
+        if not created: 
             cancion.ano_lanzamiento = ano_lanzamiento
             cancion.es_favorita = es_favorita_global
             cancion.save()
@@ -180,7 +184,7 @@ def crear_cancion(request, name):
         try:
             UsuarioCancion.objects.create(usuario=user, cancion=cancion, clave_relacion=uuid.uuid4())
             messages.success(request, f"Canción '{cancion.titulo}' agregada a tus favoritos.")
-        except Exception:
+        except Exception: 
             messages.info(request, f"La canción '{cancion.titulo}' ya estaba en tus favoritos.")
 
         return redirect('canciones:lista_canciones', name=name)
@@ -188,13 +192,12 @@ def crear_cancion(request, name):
     context = {
         "name": name,
         "is_authenticated": True,
-        "current_year": date.today().year 
+        "current_year": date.today().year
     }
     return render(request, "canciones/crear_cancion.html", context)
 
 
 def editar_cancion(request, name, id):
-
     if 'nombre_usuario' not in request.session or request.session.get('nombre_usuario') != name:
         messages.error(request, "Acceso no autorizado.")
         return redirect('login')
@@ -214,7 +217,7 @@ def editar_cancion(request, name, id):
             messages.error(request, "El título de la canción no puede estar vacío.")
             context = {"cancion": cancion, "name": name, "is_authenticated": True, "current_year": date.today().year}
             return render(request, "canciones/editar_cancion.html", context)
-        
+
         if UsuarioCancion.objects.filter(
             usuario=user, 
             cancion__titulo=nuevo_titulo
@@ -233,7 +236,7 @@ def editar_cancion(request, name, id):
             messages.error(request, "El año de lanzamiento debe ser un número válido.")
             context = {"cancion": cancion, "name": name, "is_authenticated": True, "current_year": date.today().year}
             return render(request, "canciones/editar_cancion.html", context)
-
+        
         cancion.titulo = nuevo_titulo
         cancion.artista = nuevo_artista
         cancion.album = nuevo_album
@@ -268,8 +271,6 @@ def borrar_cancion(request, name, id):
     
     return redirect('canciones:lista_canciones', name=name)
 
-
-# --- Vistas Públicas ---
 
 def vista_publica_canciones(request):
     canciones_favoritas_publicas = Cancion.objects.filter(es_favorita=True).distinct().order_by('titulo')

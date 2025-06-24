@@ -9,6 +9,7 @@ class Cancion(models.Model):
     ano_lanzamiento = models.IntegerField(blank=True, null=True)
     es_favorita = models.BooleanField(default=False)
     fecha_agregada = models.DateField(default=date.today)
+    #uuid = models.TextField(max_length=200, default="Sin uuid")
 
     def __str__(self):
         return f"{self.titulo} por {self.artista if self.artista else 'Artista Desconocido'}"
@@ -26,7 +27,7 @@ class UsuarioCancion(models.Model):
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="canciones_favoritas")
     cancion = models.ForeignKey(Cancion, on_delete=models.CASCADE)
     clave_relacion = models.CharField(max_length=100, unique=True, default=uuid_lib.uuid4)
-   
+
     class Meta:
         unique_together = ('usuario', 'cancion')
 

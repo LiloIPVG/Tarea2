@@ -13,8 +13,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            justify-content: center;
+            min-height: 100vh; /* Para que el footer se quede abajo */
+            justify-content: center; /* Centrar verticalmente el contenido */
         }
         .login-container {
             background-color: #fff;
@@ -63,14 +63,14 @@
         button:hover {
             background-color: #0056b3;
         }
-        .register-link {
+        .register-link, .public-link { /* Añadido .public-link */
             display: block;
             margin-top: 15px;
             color: #007bff;
             text-decoration: none;
             font-size: 0.9em;
         }
-        .register-link:hover {
+        .register-link:hover, .public-link:hover { /* Añadido .public-link */
             text-decoration: underline;
         }
         .messages {
@@ -97,10 +97,10 @@
             color: #155724;
             border: 1px solid #c3e6cb;
         }
-
+        /* Nuevo estilo para el footer */
         .footer {
             width: 100%;
-            max-width: 800px; 
+            max-width: 800px; /* Ancho para coincidir con otros contenidos si los hubiera */
             margin-top: 40px;
             padding: 20px;
             background-color: #333;
@@ -137,6 +137,7 @@
             <button type="submit">Entrar</button>
         </form>
         <a href="{% url 'register' %}" class="register-link">¿No tienes cuenta? Regístrate aquí</a>
+        <a href="{% url 'canciones:vista_publica_canciones' %}" class="public-link">Ver Canciones Públicas</a> {# Nuevo botón #}
     </div>
 
     <footer class="footer">

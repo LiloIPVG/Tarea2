@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'canciones.apps.CancionesConfig', # <--- ¡IMPORTANTE! Debe ser 'canciones.apps.CancionesConfig'
+    'canciones.apps.CancionesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
